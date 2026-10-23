@@ -28,9 +28,9 @@
 <script defer src="https://good.lasagna.pizza/script.js" data-website-id="6dfe252a-f847-4c08-a1b4-2867366bcfe5"></script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦙</text></svg>">
 <style>
-  :root { --bg: #fafaf9; --fg: #1c1917; --muted: #78716c; --line: #e7e5e4; --code: #f5f5f4; --accent: #4f46e5; }
+  :root { --bg: #fafaf9; --fg: #1c1917; --muted: #78716c; --line: #e7e5e4; --code: #f5f5f4; --accent: #4f46e5; --j-key: #7c3aed; --j-str: #047857; --j-num: #b45309; --j-lit: #be123c; }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #0c0a09; --fg: #f5f5f4; --muted: #a8a29e; --line: #292524; --code: #1c1917; --accent: #a5b4fc; }
+    :root { --bg: #0c0a09; --fg: #f5f5f4; --muted: #a8a29e; --line: #292524; --code: #1c1917; --accent: #a5b4fc; --j-key: #c4b5fd; --j-str: #6ee7b7; --j-num: #fcd34d; --j-lit: #fda4af; }
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 ui-sans-serif, system-ui, sans-serif; }
@@ -42,6 +42,7 @@
   a { color: var(--accent); }
   code, pre { font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
   pre { background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; margin: 0 0 12px; }
+  .json .k { color: var(--j-key); } .json .s { color: var(--j-str); } .json .n { color: var(--j-num); } .json .b { color: var(--j-lit); } .json .c { color: var(--muted); }
   table { width: 100%; border-collapse: collapse; font-size: 15px; }
   td { padding: 10px 0; border-top: 1px solid var(--line); vertical-align: top; }
   td:first-child { padding-right: 16px; white-space: nowrap; }
@@ -70,25 +71,93 @@
   </table>
   <p class="muted" style="margin-top:12px">Spec: <a href="/openapi.json">openapi.json</a>. For LLMs: <a href="/llms.txt">llms.txt</a></p>
 
-  <h2>Shape</h2>
-<pre>{
-  "source": "https://ollama.com/library?sort=newest",
-  "fetched_at": "2026-10-23T16:00:00.000Z",
-  "count": 260,
-  "models": [{
-    "name": "d3",
-    "url": "https://ollama.com/library/d3",
-    "description": "Turn text, structured data, and images into scored choices, yes/no answers, and ratings.",
-    "capabilities": ["vision", "decision"],
-    "sizes": ["2b", "4b", "9b", "27b"],
-    "cloud": false,
-    "pulls": 2905,
-    "pulls_label": "2,905",
-    "tags": 16,
-    "updated_at": "2026-10-22T16:49:00.000Z",
-    "updated_label": "yesterday",
-    "size_bytes": { "latest": 5600000000, "2b": 3100000000, "4b": 5600000000, "9b": 10000000000, "27b": 29000000000 }
-  }]
+  <h2>Examples</h2>
+  <p><code>GET <a href="/api/models">/api/models</a></code></p>
+<pre class="json">{
+  <span class="k">"source"</span>: <span class="s">"https://ollama.com/library?sort=newest"</span>,
+  <span class="k">"fetched_at"</span>: <span class="s">"2026-10-23T22:49:32.971Z"</span>,
+  <span class="k">"count"</span>: <span class="n">260</span>,
+  <span class="k">"models"</span>: [
+    {
+      <span class="k">"name"</span>: <span class="s">"d3"</span>,
+      <span class="k">"url"</span>: <span class="s">"https://ollama.com/library/d3"</span>,
+      <span class="k">"description"</span>: <span class="s">"Turn text, structured data, and images into scored choices, yes/no answers, and ratings."</span>,
+      <span class="k">"capabilities"</span>: [<span class="s">"vision"</span>, <span class="s">"decision"</span>],
+      <span class="k">"sizes"</span>: [<span class="s">"2b"</span>, <span class="s">"4b"</span>, <span class="s">"9b"</span>, <span class="s">"27b"</span>],
+      <span class="k">"cloud"</span>: <span class="b">false</span>,
+      <span class="k">"pulls"</span>: <span class="n">2998</span>,
+      <span class="k">"pulls_label"</span>: <span class="s">"2,998"</span>,
+      <span class="k">"tags"</span>: <span class="n">16</span>,
+      <span class="k">"updated_at"</span>: <span class="s">"2026-10-22T16:49:00.000Z"</span>,
+      <span class="k">"updated_label"</span>: <span class="s">"yesterday"</span>,
+      <span class="k">"size_bytes"</span>: {
+        <span class="k">"latest"</span>: <span class="n">5600000000</span>,
+        <span class="k">"2b"</span>: <span class="n">3100000000</span>,
+        <span class="k">"4b"</span>: <span class="n">5600000000</span>,
+        <span class="k">"9b"</span>: <span class="n">10000000000</span>,
+        <span class="k">"27b"</span>: <span class="n">29000000000</span>
+      }
+    }
+    <span class="c">…</span>
+  ]
+}</pre>
+  <p><code>GET <a href="/api/models/d1-omni">/api/models/d1-omni</a></code></p>
+<pre class="json">{
+  <span class="k">"name"</span>: <span class="s">"d1-omni"</span>,
+  <span class="k">"url"</span>: <span class="s">"https://ollama.com/library/d1-omni"</span>,
+  <span class="k">"description"</span>: <span class="s">"d1-omni is a multimodal 600M decision model from Liquid AI"</span>,
+  <span class="k">"capabilities"</span>: [<span class="s">"vision"</span>],
+  <span class="k">"sizes"</span>: [<span class="s">"600m"</span>],
+  <span class="k">"cloud"</span>: <span class="b">false</span>,
+  <span class="k">"pulls"</span>: <span class="n">7195</span>,
+  <span class="k">"pulls_label"</span>: <span class="s">"7,195"</span>,
+  <span class="k">"tags"</span>: <span class="n">4</span>,
+  <span class="k">"updated_at"</span>: <span class="s">"2026-10-17T22:32:00.000Z"</span>,
+  <span class="k">"updated_label"</span>: <span class="s">"6 days ago"</span>,
+  <span class="k">"size_bytes"</span>: {<span class="k">"latest"</span>: <span class="n">850000000</span>, <span class="k">"600m"</span>: <span class="n">850000000</span>},
+  <span class="k">"tag_details"</span>: [
+    {
+      <span class="k">"tag"</span>: <span class="s">"latest"</span>,
+      <span class="k">"digest"</span>: <span class="s">"1ba59f63e836"</span>,
+      <span class="k">"size_bytes"</span>: <span class="n">850000000</span>,
+      <span class="k">"size_bytes_max"</span>: <span class="n">850000000</span>,
+      <span class="k">"context"</span>: <span class="n">128000</span>,
+      <span class="k">"input"</span>: [<span class="s">"text"</span>, <span class="s">"image"</span>],
+      <span class="k">"cloud"</span>: <span class="b">false</span>,
+      <span class="k">"updated_label"</span>: <span class="s">"6 days ago"</span>
+    },
+    {
+      <span class="k">"tag"</span>: <span class="s">"600m"</span>,
+      <span class="k">"digest"</span>: <span class="s">"1ba59f63e836"</span>,
+      <span class="k">"size_bytes"</span>: <span class="n">850000000</span>,
+      <span class="k">"size_bytes_max"</span>: <span class="n">850000000</span>,
+      <span class="k">"context"</span>: <span class="n">128000</span>,
+      <span class="k">"input"</span>: [<span class="s">"text"</span>, <span class="s">"image"</span>],
+      <span class="k">"cloud"</span>: <span class="b">false</span>,
+      <span class="k">"updated_label"</span>: <span class="s">"6 days ago"</span>
+    },
+    {
+      <span class="k">"tag"</span>: <span class="s">"600m-q8_0"</span>,
+      <span class="k">"digest"</span>: <span class="s">"1ba59f63e836"</span>,
+      <span class="k">"size_bytes"</span>: <span class="n">850000000</span>,
+      <span class="k">"size_bytes_max"</span>: <span class="n">850000000</span>,
+      <span class="k">"context"</span>: <span class="n">128000</span>,
+      <span class="k">"input"</span>: [<span class="s">"text"</span>, <span class="s">"image"</span>],
+      <span class="k">"cloud"</span>: <span class="b">false</span>,
+      <span class="k">"updated_label"</span>: <span class="s">"6 days ago"</span>
+    },
+    {
+      <span class="k">"tag"</span>: <span class="s">"600m-bf16"</span>,
+      <span class="k">"digest"</span>: <span class="s">"c1e95fce6627"</span>,
+      <span class="k">"size_bytes"</span>: <span class="n">1200000000</span>,
+      <span class="k">"size_bytes_max"</span>: <span class="n">1200000000</span>,
+      <span class="k">"context"</span>: <span class="n">128000</span>,
+      <span class="k">"input"</span>: [<span class="s">"text"</span>, <span class="s">"image"</span>],
+      <span class="k">"cloud"</span>: <span class="b">false</span>,
+      <span class="k">"updated_label"</span>: <span class="s">"6 days ago"</span>
+    }
+  ],
+  <span class="k">"tags_fetched_at"</span>: <span class="s">"2026-10-23T22:49:32.971Z"</span>
 }</pre>
 
   <h2>Newest</h2>
