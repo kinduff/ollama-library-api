@@ -1,0 +1,31 @@
+# Ollama Library API
+
+> Unofficial JSON API for every model in the Ollama library (https://ollama.com/library?sort=newest). Refreshed hourly, newest first. No key, CORS open.
+
+Base URL: https://ollama.kinduff.com
+
+## Endpoints
+
+- `GET /api/models`: all models, newest first. Returns `{ source, fetched_at, count, models[] }`.
+  - `?q=llama`: search name and description.
+  - `?capability=tools`: filter by capability (`tools`, `vision`, `thinking`, `embedding`, ...).
+  - `?cloud=true` or `?cloud=false`: cloud-only or local-only models.
+  - Filters combine: `/api/models?capability=tools&cloud=false`.
+- `GET /api/models/{name}`: one model, 404 if unknown. Example: `/api/models/d3`.
+
+## Model fields
+
+- `name`: model name as used with `ollama pull`.
+- `url`: page on ollama.com.
+- `description`: short description.
+- `capabilities`: e.g. `["vision", "tools", "thinking"]`.
+- `sizes`: parameter sizes, e.g. `["2b", "4b", "9b"]`. Empty for some models.
+- `cloud`: true if available as an Ollama cloud model.
+- `pulls`: approximate pull count (integer), `pulls_label`: as shown on ollama.com.
+- `tags`: number of tags, or null when not shown.
+- `updated_at`: ISO 8601 timestamp, `updated_label`: relative label like "yesterday".
+
+## Docs
+
+- [OpenAPI spec](https://ollama.kinduff.com/openapi.json)
+- [Landing page](https://ollama.kinduff.com/)

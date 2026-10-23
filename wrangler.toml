@@ -1,0 +1,19 @@
+name = "ollama-library-api"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+routes = [{ pattern = "ollama.kinduff.com", custom_domain = true }]
+
+[[rules]]
+type = "Text"
+globs = ["**/*.html", "**/*.txt"]
+fallthrough = true
+
+[[rules]]
+type = "Data"
+globs = ["**/*.png"]
+fallthrough = true
+
+[observability.logs]
+enabled = true
+invocation_logs = true

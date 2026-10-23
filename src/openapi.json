@@ -1,0 +1,75 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ollama Library API",
+    "version": "1.0.0",
+    "description": "Unofficial JSON API for every model in the Ollama library (https://ollama.com/library?sort=newest). Refreshed hourly. No key, CORS open."
+  },
+  "servers": [{ "url": "https://ollama.kinduff.com" }],
+  "security": [],
+  "paths": {
+    "/api/models": {
+      "get": {
+        "summary": "List models, newest first",
+        "operationId": "listModels",
+        "parameters": [
+          { "name": "q", "in": "query", "description": "Search name and description (case-insensitive).", "schema": { "type": "string" } },
+          { "name": "capability", "in": "query", "description": "Filter by capability, e.g. tools, vision, thinking, embedding.", "schema": { "type": "string" } },
+          { "name": "cloud", "in": "query", "description": "true for cloud models only, false for local only.", "schema": { "type": "string", "enum": ["true", "false"] } }
+        ],
+        "responses": {
+          "200": { "description": "Model list", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Library" } } } },
+          "502": { "description": "Upstream fetch or parse failed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    },
+    "/api/models/{name}": {
+      "get": {
+        "summary": "Get one model by name",
+        "operationId": "getModel",
+        "parameters": [{ "name": "name", "in": "path", "required": true, "schema": { "type": "string" }, "example": "d3" }],
+        "responses": {
+          "200": { "description": "Model", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Model" } } } },
+          "404": { "description": "Model not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "502": { "description": "Upstream fetch or parse failed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Library": {
+        "type": "object",
+        "required": ["source", "fetched_at", "count", "models"],
+        "properties": {
+          "source": { "type": "string", "format": "uri" },
+          "fetched_at": { "type": "string", "format": "date-time" },
+          "count": { "type": "integer" },
+          "models": { "type": "array", "items": { "$ref": "#/components/schemas/Model" } }
+        }
+      },
+      "Model": {
+        "type": "object",
+        "required": ["name", "url", "description", "capabilities", "sizes", "cloud"],
+        "properties": {
+          "name": { "type": "string", "example": "d3" },
+          "url": { "type": "string", "format": "uri" },
+          "description": { "type": "string" },
+          "capabilities": { "type": "array", "items": { "type": "string" }, "example": ["vision", "decision"] },
+          "sizes": { "type": "array", "items": { "type": "string" }, "example": ["2b", "4b", "9b", "27b"] },
+          "cloud": { "type": "boolean" },
+          "pulls": { "type": ["integer", "null"], "description": "Approximate; parsed from labels like 40K." },
+          "pulls_label": { "type": ["string", "null"], "example": "2,905" },
+          "tags": { "type": ["integer", "null"], "description": "Null when ollama.com shows no tag count." },
+          "updated_at": { "type": ["string", "null"], "format": "date-time" },
+          "updated_label": { "type": ["string", "null"], "example": "yesterday" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": { "error": { "type": "string" } }
+      }
+    }
+  }
+}

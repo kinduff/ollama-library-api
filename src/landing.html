@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ollama Library API</title>
+<meta name="description" content="The missing Ollama library API, completely free. Every model on ollama.com as JSON, refreshed every hour.">
+<link rel="canonical" href="https://ollama.kinduff.com/">
+<meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0a09" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ollama Library API">
+<meta property="og:url" content="https://ollama.kinduff.com/">
+<meta property="og:title" content="Ollama Library API">
+<meta property="og:description" content="The missing Ollama library API, completely free. Every model on ollama.com as JSON, refreshed every hour.">
+<meta property="og:image" content="https://ollama.kinduff.com/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ollama Library API: the missing Ollama library API, completely free.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kinduff">
+<meta name="twitter:creator" content="@kinduff">
+<meta name="twitter:title" content="Ollama Library API">
+<meta name="twitter:description" content="The missing Ollama library API, completely free. Every model on ollama.com as JSON, refreshed every hour.">
+<meta name="twitter:image" content="https://ollama.kinduff.com/og.png">
+<meta name="twitter:image:alt" content="Ollama Library API: the missing Ollama library API, completely free.">
+<script defer src="https://good.lasagna.pizza/script.js" data-website-id="6dfe252a-f847-4c08-a1b4-2867366bcfe5"></script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦙</text></svg>">
+<style>
+  :root { --bg: #fafaf9; --fg: #1c1917; --muted: #78716c; --line: #e7e5e4; --code: #f5f5f4; --accent: #4f46e5; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0c0a09; --fg: #f5f5f4; --muted: #a8a29e; --line: #292524; --code: #1c1917; --accent: #a5b4fc; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 ui-sans-serif, system-ui, sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 64px 16px; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 1rem; margin: 40px 0 12px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); }
+  a { color: var(--accent); }
+  code, pre { font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  pre { background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; margin: 0 0 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  td { padding: 10px 0; border-top: 1px solid var(--line); vertical-align: top; }
+  td:first-child { padding-right: 16px; white-space: nowrap; }
+  #models { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; list-style: none; }
+  #models a { display: inline-block; padding: 2px 8px; border: 1px solid var(--line); border-radius: 6px; color: var(--fg); text-decoration: none; font-size: 14px; }
+  #models a:hover { border-color: var(--accent); }
+  footer { margin-top: 56px; font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ollama Library API 🦙</h1>
+  <p class="muted">The missing <a href="https://ollama.com/library?sort=newest" target="_blank" rel="noopener">Ollama library</a> API, completely free. Refreshes every hour, newest first, CORS open, no key.</p>
+  <p id="status" class="muted"></p>
+
+  <h2>Try it</h2>
+  <pre>curl https://ollama.kinduff.com/api/models</pre>
+
+  <h2>Endpoints</h2>
+  <table>
+    <tr><td><code>GET /api/models</code></td><td>All models, newest first.</td></tr>
+    <tr><td><code>?q=llama</code></td><td>Search name and description.</td></tr>
+    <tr><td><code>?capability=tools</code></td><td>Filter by <code>tools</code>, <code>vision</code>, <code>thinking</code>, <code>embedding</code>…</td></tr>
+    <tr><td><code>?cloud=true</code></td><td>Only cloud models (or <code>false</code> for local only).</td></tr>
+    <tr><td><code>GET /api/models/:name</code></td><td>One model, e.g. <a href="/api/models/d3"><code>/api/models/d3</code></a>.</td></tr>
+  </table>
+  <p class="muted" style="margin-top:12px">Spec: <a href="/openapi.json">openapi.json</a>. For LLMs: <a href="/llms.txt">llms.txt</a></p>
+
+  <h2>Shape</h2>
+<pre>{
+  "source": "https://ollama.com/library?sort=newest",
+  "fetched_at": "2026-10-23T16:00:00.000Z",
+  "count": 260,
+  "models": [{
+    "name": "d3",
+    "url": "https://ollama.com/library/d3",
+    "description": "Turn text, structured data, and images into scored choices, yes/no answers, and ratings.",
+    "capabilities": ["vision", "decision"],
+    "sizes": ["2b", "4b", "9b", "27b"],
+    "cloud": false,
+    "pulls": 2905,
+    "pulls_label": "2,905",
+    "tags": 16,
+    "updated_at": "2026-10-22T16:49:00.000Z",
+    "updated_label": "yesterday"
+  }]
+}</pre>
+
+  <h2>Newest</h2>
+  <ul id="models"></ul>
+
+  <footer class="muted">Made by <a href="https://kinduff.com" target="_blank" rel="noopener">@kinduff</a>. Unofficial. Not affiliated with Ollama. Data scraped from ollama.com.</footer>
+</main>
+<script>
+  fetch("/api/models")
+    .then((r) => r.json())
+    .then((d) => {
+      document.getElementById("status").textContent =
+        `${d.count} models, last fetched ${new Date(d.fetched_at).toLocaleString()}`;
+      const list = document.getElementById("models");
+      for (const m of d.models.slice(0, 24)) {
+        const a = Object.assign(document.createElement("a"), { href: m.url, target: "_blank", rel: "noopener", textContent: m.name });
+        list.appendChild(document.createElement("li")).appendChild(a);
+      }
+    })
+    .catch(() => {});
+</script>
+</body>
+</html>
