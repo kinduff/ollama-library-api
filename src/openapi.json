@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Ollama Library API",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Unofficial JSON API for every model in the Ollama library (https://ollama.com/library?sort=newest). Refreshed hourly. No key, CORS open."
   },
   "servers": [{ "url": "https://ollama.kinduff.com" }],
@@ -25,11 +25,11 @@
     },
     "/api/models/{name}": {
       "get": {
-        "summary": "Get one model by name",
+        "summary": "Get one model by name, with every tag",
         "operationId": "getModel",
         "parameters": [{ "name": "name", "in": "path", "required": true, "schema": { "type": "string" }, "example": "d3" }],
         "responses": {
-          "200": { "description": "Model", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Model" } } } },
+          "200": { "description": "Model", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ModelDetail" } } } },
           "404": { "description": "Model not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
           "502": { "description": "Upstream fetch or parse failed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
@@ -62,7 +62,34 @@
           "pulls_label": { "type": ["string", "null"], "example": "2,905" },
           "tags": { "type": ["integer", "null"], "description": "Null when ollama.com shows no tag count." },
           "updated_at": { "type": ["string", "null"], "format": "date-time" },
-          "updated_label": { "type": ["string", "null"], "example": "yesterday" }
+          "updated_label": { "type": ["string", "null"], "example": "yesterday" },
+          "size_bytes": { "type": ["object", "null"], "additionalProperties": { "type": "integer" }, "description": "Download in bytes of each size and latest, from the model's tags page. Null until read; empty for cloud-only models and models with only variant tags.", "example": { "latest": 5600000000, "4b": 5600000000 } }
+        }
+      },
+      "ModelDetail": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Model" },
+          {
+            "type": "object",
+            "properties": {
+              "tag_details": { "type": ["array", "null"], "items": { "$ref": "#/components/schemas/Tag" }, "description": "Every tag on the model's tags page. Null until read." },
+              "tags_fetched_at": { "type": ["string", "null"], "format": "date-time" }
+            }
+          }
+        ]
+      },
+      "Tag": {
+        "type": "object",
+        "required": ["tag"],
+        "properties": {
+          "tag": { "type": "string", "example": "4b" },
+          "digest": { "type": ["string", "null"], "description": "Short digest; tags with the same digest are the same build.", "example": "492e37dc6907" },
+          "size_bytes": { "type": ["integer", "null"], "description": "What ollama pull downloads. Null for cloud tags.", "example": 3300000000 },
+          "size_bytes_max": { "type": ["integer", "null"], "description": "A larger variant (MLX) when ollama.com shows a range, else size_bytes.", "example": 4000000000 },
+          "context": { "type": ["integer", "null"], "description": "Context window in tokens.", "example": 262144 },
+          "input": { "type": "array", "items": { "type": "string" }, "example": ["text", "image"] },
+          "cloud": { "type": "boolean" },
+          "updated_label": { "type": ["string", "null"], "example": "2 weeks ago" }
         }
       },
       "Error": {

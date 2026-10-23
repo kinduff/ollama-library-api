@@ -66,7 +66,7 @@
     <tr><td><code>?q=llama</code></td><td>Search name and description.</td></tr>
     <tr><td><code>?capability=tools</code></td><td>Filter by <code>tools</code>, <code>vision</code>, <code>thinking</code>, <code>embedding</code>…</td></tr>
     <tr><td><code>?cloud=true</code></td><td>Only cloud models (or <code>false</code> for local only).</td></tr>
-    <tr><td><code>GET /api/models/:name</code></td><td>One model, e.g. <a href="/api/models/d3"><code>/api/models/d3</code></a>.</td></tr>
+    <tr><td><code>GET /api/models/:name</code></td><td>One model with every tag (size, context, input), e.g. <a href="/api/models/d3"><code>/api/models/d3</code></a>.</td></tr>
   </table>
   <p class="muted" style="margin-top:12px">Spec: <a href="/openapi.json">openapi.json</a>. For LLMs: <a href="/llms.txt">llms.txt</a></p>
 
@@ -86,9 +86,11 @@
     "pulls_label": "2,905",
     "tags": 16,
     "updated_at": "2026-10-22T16:49:00.000Z",
-    "updated_label": "yesterday"
+    "updated_label": "yesterday",
+    "size_bytes": { "latest": 5600000000, "2b": 3100000000, "4b": 5600000000, "9b": 10000000000, "27b": 29000000000 }
   }]
 }</pre>
+  <p class="muted"><code>size_bytes</code>: the download of each size and <code>latest</code>, read from each model's tags page every few minutes (null until read). <code>/api/models/:name</code> adds <code>tag_details</code>: every tag with its digest, <code>size_bytes</code> (what <code>ollama pull</code> downloads), <code>size_bytes_max</code> (a larger variant such as MLX), <code>context</code> in tokens, <code>input</code> and <code>cloud</code>.</p>
 
   <h2>Newest</h2>
   <ul id="models"></ul>

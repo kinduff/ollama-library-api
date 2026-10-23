@@ -11,7 +11,7 @@ Base URL: https://ollama.kinduff.com
   - `?capability=tools`: filter by capability (`tools`, `vision`, `thinking`, `embedding`, ...).
   - `?cloud=true` or `?cloud=false`: cloud-only or local-only models.
   - Filters combine: `/api/models?capability=tools&cloud=false`.
-- `GET /api/models/{name}`: one model, 404 if unknown. Example: `/api/models/d3`.
+- `GET /api/models/{name}`: one model, 404 if unknown, with `tag_details` (every tag) and `tags_fetched_at`. Example: `/api/models/d3`.
 
 ## Model fields
 
@@ -24,6 +24,14 @@ Base URL: https://ollama.kinduff.com
 - `pulls`: approximate pull count (integer), `pulls_label`: as shown on ollama.com.
 - `tags`: number of tags, or null when not shown.
 - `updated_at`: ISO 8601 timestamp, `updated_label`: relative label like "yesterday".
+- `size_bytes`: download in bytes of each size and `latest`, e.g. `{"latest": 6600000000, "4b": 3300000000}`. Null until the model's tags page is read (every few minutes, a few dozen models at a time); empty for cloud-only models and models with only variant tags (see `tag_details`).
+
+## Tag fields (`tag_details`, one model only)
+
+- `tag`: e.g. `4b`, `4b-q8_0`, `latest`. `digest`: short digest; tags with the same digest are the same build.
+- `size_bytes`: what `ollama pull` downloads; `size_bytes_max`: a larger variant (MLX) when ollama.com shows a range, else the same. Null for cloud tags.
+- `context`: context window in tokens (`256K` = 262144).
+- `input`: e.g. `["text", "image"]`. `cloud`: a cloud tag. `updated_label`: e.g. "2 weeks ago".
 
 ## Docs
 
