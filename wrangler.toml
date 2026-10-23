@@ -4,6 +4,17 @@ compatibility_date = "2026-10-01"
 
 routes = [{ pattern = "ollama.kinduff.com", custom_domain = true }]
 
+# Every 5 minutes: read up to PAGES_PER_RUN models' tags pages into KV (see refreshDetails).
+[triggers]
+crons = ["*/5 * * * *"]
+
+[vars]
+PAGES_PER_RUN = "40"
+
+[[kv_namespaces]]
+binding = "DETAILS"
+id = "f2e1a9385bb34f9399445949755b5cd1"
+
 [[rules]]
 type = "Text"
 globs = ["**/*.html", "**/*.txt"]
