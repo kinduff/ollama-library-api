@@ -44,7 +44,15 @@ export default {
     if (pathname === "/openapi.json") return json(openapi);
 
     if (pathname === "/og.png") {
-      return new Response(ogImage, { headers: { "content-type": "image/png", "cache-control": "public, max-age=86400" } });
+      return new Response(request.method === "HEAD" ? null : ogImage, {
+        headers: {
+          "content-type": "image/png",
+          "content-length": String(ogImage.byteLength),
+          "cache-control": "public, max-age=86400",
+          "access-control-allow-origin": "*",
+          "cross-origin-resource-policy": "cross-origin",
+        },
+      });
     }
 
     if (pathname === "/llms.txt") {
